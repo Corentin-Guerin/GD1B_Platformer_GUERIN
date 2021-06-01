@@ -1,0 +1,68 @@
+<!--
+¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦
+¦¦¦¦¦¦¦¦                                                                            ¦¦¦¦¦¦¦¦
+¦¦¦¦¦¦¦¦               _____________________________________________                ¦¦¦¦¦¦¦¦
+¦¦¦¦¦¦¦¦      ________|                                             |________       ¦¦¦¦¦¦¦¦
+¦¦¦¦¦¦¦¦     \        |         LOLA : La Malédiction De Night      |       /       ¦¦¦¦¦¦¦¦
+¦¦¦¦¦¦¦¦      \       |                                             |      /        ¦¦¦¦¦¦¦¦
+¦¦¦¦¦¦¦¦       \      |                                             |     /         ¦¦¦¦¦¦¦¦
+¦¦¦¦¦¦¦¦        \     |              GUERIN Corentin                |    /          ¦¦¦¦¦¦¦¦
+¦¦¦¦¦¦¦¦        /     |                    ETPA                     |    \          ¦¦¦¦¦¦¦¦
+¦¦¦¦¦¦¦¦       /      |            Projet de fin d'année            |     \         ¦¦¦¦¦¦¦¦
+¦¦¦¦¦¦¦¦      /       |_____________________________________________|      \        ¦¦¦¦¦¦¦¦
+¦¦¦¦¦¦¦¦     /___________)                                 (________________\       ¦¦¦¦¦¦¦¦
+¦¦¦¦¦¦¦¦                                                                            ¦¦¦¦¦¦¦¦
+¦¦¦¦¦¦¦¦                                                                            ¦¦¦¦¦¦¦¦
+¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦
+-->
+
+<!doctype html> 
+<html lang="fr"> 
+  <head> 
+    <title>LOLA : La Malédiction De Night</title>   
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <style type="text/css">
+      html,
+      #body{
+        background-image: linear-gradient(0.25turn,rgba(190, 141, 68, 0.678), rgba(126, 88, 53, 0.815));
+    
+              margin:0 ;
+              padding: 0;
+      }
+      
+      #game-container {
+        margin: 0;
+        padding: 0;
+      }
+
+      #game-container {
+        min-width: 100vw;
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      #game-container > canvas {
+        cursor: url("assets/images/cursor.png"), pointer;
+        border-radius: 5px;
+        border: solid;
+        border-color:black;
+      }
+    </style>
+  </head>
+
+  <body>
+    <!---->
+    <div id="game-container"></div>
+    <script src="//cdn.jsdelivr.net/npm/phaser@3.54.0/dist/phaser.js"></script>
+    <script type="text/javascript" src="SceneMenu.js"></script>
+    <script type="text/javascript" src="MenuControles.js"></script>
+    <script type="text/javascript" src="MenuCredits.js"></script>
+    <script type="text/javascript" src="Scene2.js"></script>
+    <script type="text/javascript" src="Scene3.js"></script>
+    <script type="text/javascript" src="index.js" type="module"></script>
+  </body>
+</html>
+

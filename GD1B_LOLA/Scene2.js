@@ -226,7 +226,7 @@ class Scene2 extends Phaser.Scene{
     
         this.physics.add.collider(player, worldLayer);
         
-        //this.physics.add.collider(player, drapeau,finniveau,null,this);
+        this.physics.add.collider(player, drapeau,finniveau,null,this);
 
         this.physics.add.collider(enemies1, worldLayer);
         this.physics.add.collider(enemies2, worldLayer);
@@ -294,18 +294,21 @@ class Scene2 extends Phaser.Scene{
         
 
         if(life <0){
-            this.add.text(448, 224, "You Loose", { font: "18px monospace",fill: "#000000",padding: { x: 50, y: 25 },backgroundColor: "#ffffff"})
+           
+            gameOver = true ;
+           
+        }
+        if (gameOver){ 
+          /*  this.add.text(448, 224, "You Loose", { font: "18px monospace",fill: "#000000",padding: { x: 50, y: 25 },backgroundColor: "#ffffff"})
             .setDepth(1)
             .setScrollFactor(0);
         
         
-            this.physics.pause();
-            gameOver = true ;
-           
-        }
-        if (gameOver){
+            this.physics.pause();*/
             //changement vers scene game over//
-            return;
+          
+            this.scene.start("ScenePerdu");
+            //return;
         }
 
         if(invincible == true){
@@ -622,13 +625,14 @@ class Scene2 extends Phaser.Scene{
 
 function finniveau(player,drapeau)
 {
-    this.add.text(448, 224, "You win", { font: "18px monospace",fill: "#000000",padding: { x: 50, y: 25 },backgroundColor: "#ffffff"})
+    /*this.add.text(448, 224, "You win", { font: "18px monospace",fill: "#000000",padding: { x: 50, y: 25 },backgroundColor: "#ffffff"})
     .setDepth(1)
     .setScrollFactor(0);
 
 
     this.physics.pause();
-    gameOver = true ;
+    gameOver = true ;*/
+    this.scene.start("SceneGagne");
 }
 
 

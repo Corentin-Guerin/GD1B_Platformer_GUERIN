@@ -16,7 +16,7 @@ var config = {
         }
     },
     input : {gamepad:true},
-    scene: [SceneMenu,MenuControles,MenuCredits, Scene2,Scene3],
+    scene: [SceneMenu,MenuControles,MenuCredits, Scene2,ScenePerdu,SceneGagne],
     scale: {zoom:1,}
 
 };

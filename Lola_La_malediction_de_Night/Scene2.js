@@ -642,6 +642,7 @@ class Scene2 extends Phaser.Scene{
                         projectil = projectils.create(enemie2.x,enemie2.y-16,'projectil');
                         projectil.setVelocityX(randomX);
                         projectil.setVelocityY(randomY);
+                        projectil.anims.play("projectilanims",true);
 
                         if(randomX <= 0){
                              projectil.setFlipX(false);
@@ -649,7 +650,7 @@ class Scene2 extends Phaser.Scene{
                         else{
                              projectil.setFlipX(true);
                         }
-                        projectil.anims.play("projectilanims",true);
+                        
                          
                        
                 }
@@ -777,14 +778,15 @@ class Scene2 extends Phaser.Scene{
                                 randomX = Math.floor(Math.random() *Math.floor((250) - (-250))+(-250));
                                 projectil = projectils.create(boss.x,boss.y-16,'projectil');
                                 projectil.setVelocityX(randomX);
-                                projectil.setVelocityY(randomY);
+                                projectil.setVelocityY(randomY); 
+                                projectil.anims.play("projectilanims",true);
                                 if(randomX <= 0){
                                     projectil.setFlipX(false);
                                }
                                else{
                                     projectil.setFlipX(true);
                                }
-                               projectil.anims.play("projectilanims",true);
+                              
                          
                                 
                             }      

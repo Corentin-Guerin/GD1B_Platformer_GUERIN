@@ -2,6 +2,7 @@
 var cursors;
 var player;
 var gameOver =false;
+var win = false;
 var invincible = false ;
 
 var cursors2;
@@ -17,6 +18,7 @@ var etat_brume = false ;
 var ornement;
 var brume;
 var jauge_corruption;
+var image_vie;
 var checkpoint = 0 ;
 
 var onGround;
@@ -38,6 +40,8 @@ var projectils;
 var projectil;
 var enemie3;
 var enemies3;
+var particule;
+
 
 
 var grille_activ = false ;
@@ -58,6 +62,11 @@ var sens_boss ;
 var boss_vivant = false ;
 var pv_boss = 3;
 var invulenrableboss = false;
+
+
+var imagebotte;
+var imagebaton;
+var imagebouclier;
 
 var get_item1 = false ;
 var item1;
@@ -99,9 +108,16 @@ class Scene2 extends Phaser.Scene{
         this.load.image("brume", "assets/images/brume.png");
         this.load.image("brumes", "assets/images/brumes.png");
         this.load.image("grille", "assets/images/grille.png");
-        this.load.spritesheet("jauge_corruption", 'assets/tilesets/corruption2.png', { frameWidth:198, frameHeight: 55,});
+        this.load.image("particule", "assets/images/particule.png");
+        this.load.audio("audio_fond","assets/images/audio_fond.mp3")
 
-        //this.load.tilemapTiledJSON("map", "assets/tilemaps/maptest.json");
+        this.load.spritesheet("bouclier", "assets/tilesets/bouclier.png", { frameWidth:72, frameHeight: 72,});
+        this.load.spritesheet("Botte", "assets/tilesets/botte.png", { frameWidth:72, frameHeight: 72,});
+        this.load.spritesheet("Baton", "assets/tilesets/baton.png", { frameWidth:72, frameHeight: 72,});
+        this.load.spritesheet("jauge_corruption", 'assets/tilesets/corruption2.png', { frameWidth:198, frameHeight: 55,});
+        this.load.spritesheet("image_vie", 'assets/tilesets/vie.png', { frameWidth:192, frameHeight: 96,});
+
+
         this.load.tilemapTiledJSON("map", "assets/tilemaps/Niveau.json");
 		this.load.spritesheet("Ennemie3", 'assets/tilesets/Ennemie3.png', { frameWidth:64, frameHeight: 64,});
         this.load.spritesheet("Ennemie2", 'assets/tilesets/Ennemie2.png', { frameWidth:64, frameHeight: 64,});
@@ -109,7 +125,7 @@ class Scene2 extends Phaser.Scene{
         this.load.spritesheet("Boss", 'assets/tilesets/boss.png', { frameWidth:64, frameHeight: 64,});
         this.load.spritesheet("projectilboss", 'assets/tilesets/projectilboss.png', { frameWidth:64, frameHeight: 64,});
         this.load.spritesheet("projectil", 'assets/tilesets/projectil.png', { frameWidth:32, frameHeight: 32,});
-        this.load.spritesheet("player", 'assets/Lola2.png', { frameWidth:64, frameHeight: 96,});
+        this.load.spritesheet("player", 'assets/tilesets/Lola2.png', { frameWidth:64, frameHeight: 96,});
         
        
     }
@@ -128,9 +144,8 @@ class Scene2 extends Phaser.Scene{
         map.createLayer("deco2", tileset, 0, 0); 
         
         
-        //const drapeau = map.createLayer("Drapeau", tileset, 0, 0);
+        
         worldLayer.setCollisionByExclusion(-1,true) ;
-        //drapeau.setCollisionByExclusion(-1,true) ;
 
         this.add.image(896,224, 'baground4').setDepth(-1).setScrollFactor(0.12).setScale(0.6);
         this.add.image(896,224, 'baground3').setDepth(-2).setScrollFactor(0.11).setScale(0.6);
@@ -140,16 +155,35 @@ class Scene2 extends Phaser.Scene{
         this.add.image(896,224, 'baground').setDepth(-6).setScrollFactor(0.0).setScale(0.6);
         this.add.image(4000,400, 'brumes').setDepth(2).setScrollFactor(1).setScale(1);
 
+        this.musicFond = this.sound.add('audio_fond')
+        var musicConfig = {
+            mute : false,
+            volume : 0.3,
+            rate : 1,
+            deturne : 0,
+            seek : 0,
+            loop : false,
+            delay : 0,
+
+        }
+        this.musicFond.play(musicConfig);
+
         ornement = this.add.image(448,224, 'ornement')
         .setDepth(5)
         .setScrollFactor(0)
         .setScale(1);
         
-        jauge_corruption = this.physics.add.sprite(110,90, 'jauge_corruption')
+        jauge_corruption = this.physics.add.sprite(90,95, 'jauge_corruption')
         .setDepth(5)
         .setScrollFactor(0)
         .setScale(0.7);
         jauge_corruption.body.allowGravity = false;
+        
+        image_vie = this.physics.add.sprite(90,50, 'image_vie')
+        .setDepth(5)
+        .setScrollFactor(0)
+        .setScale(0.56);
+        image_vie.body.allowGravity = false;
         
 
         brume = this.add.image(448,224, 'brume')
@@ -189,17 +223,23 @@ class Scene2 extends Phaser.Scene{
         camera.setBounds(0, 0, map.widthInPixels, map.heightInPixels);
 
         
-        if(get_item1){this.add.image(500,16, 'Bouclier')
-        .setDepth(5)
-        .setScrollFactor(0);}
+        if(get_item1){ 
+        imagebotte = this.add.image(449,69, 'Botte')
+        .setDepth(6)
+        .setScrollFactor(0)
+        .setScale(0.4);}
 
-        if(get_item2){this.add.image(450,32, 'Baton')
+        if(get_item2){
+        imagebaton = this.add.image(423,39, 'Baton')
         .setDepth(5)
-        .setScrollFactor(0);}
+        .setScrollFactor(0)
+        .setScale(0.4);}
         
-        if(get_item3){ this.add.image(400,16, 'Botte')
+        if(get_item3){
+            imagebouclier = this.add.image(474,39, 'bouclier')
             .setDepth(5)
-            .setScrollFactor(0);}
+            .setScrollFactor(0)
+            .setScale(0.4);}
 
 
         //Enemie 1////////////////////////
@@ -252,6 +292,21 @@ class Scene2 extends Phaser.Scene{
         } 
 
         //Boss ////////////////////////
+
+        //Particule//////////////////
+        particule = this.add.particles('particule').createEmitter({
+            x: 200,
+            y: 200,
+            quantity:15,
+            speed: { min: -100, max: 100 },
+            angle: { min: -180, max: 180 },
+            scale: { start: 0.5, end: 0 },
+            lifespan: 300,
+            gravityY: -500,
+            active: false
+        });
+
+
         boss_spawn1 = map.findObject("Boss", obj => obj.name === "Boss1");
         boss_spawn2 = map.findObject("Boss", obj => obj.name === "Boss2");
         boss_spawn3 = map.findObject("Boss", obj => obj.name === "Boss3");
@@ -267,7 +322,7 @@ class Scene2 extends Phaser.Scene{
         //Item 1 ////////////////////////////////////
         if(get_item1 === false){
             const creatitem1 = map.findObject("Item", obj => obj.name === "Item1");
-            item1 = this.physics.add.sprite(creatitem1.x, creatitem1.y,"BotteFragment")
+            item1 = this.physics.add.sprite(creatitem1.x, creatitem1.y,"Botte")
             .setSize(32, 32,) .setDepth(1) ;
 
             item1.body.allowGravity = false;
@@ -275,7 +330,7 @@ class Scene2 extends Phaser.Scene{
 		//Item 2 //////////////////////////////////// Ne fonctionne pas avec tout les ennemies (pb pour figé les ennemies)
         if(get_item2 === false){
             const creatitem2 = map.findObject("Item", obj => obj.name === "Item2");
-            item2 = this.physics.add.sprite(creatitem2.x, creatitem2.y,"BatonFragment")
+            item2 = this.physics.add.sprite(creatitem2.x, creatitem2.y,"Baton")
             .setSize(32, 32,) .setDepth(3) ;
 			
             item2.body.allowGravity = false;
@@ -284,7 +339,7 @@ class Scene2 extends Phaser.Scene{
         //Item 3 ////////////////////////////////////
         if(get_item3 === false){
             const creatitem3 = map.findObject("Item", obj => obj.name === "Item3");
-            item3 = this.physics.add.sprite(creatitem3.x, creatitem3.y,"BouclierFragment")
+            item3 = this.physics.add.sprite(creatitem3.x, creatitem3.y,"bouclier")
             .setSize(32, 32,) .setDepth(1) ;
 			
             item3.body.allowGravity = false;
@@ -355,6 +410,47 @@ class Scene2 extends Phaser.Scene{
             frames: this.anims.generateFrameNumbers('player', { start: 7, end: 7 }),
             frameRate: 15,
             
+        });
+
+        anims.create({
+            key: 'animlolajump1',
+            frames: this.anims.generateFrameNumbers('player', { start: 9, end: 9 }),
+            frameRate: 15,
+            
+        });
+        anims.create({
+            key: 'animlolajump2',
+            frames: this.anims.generateFrameNumbers('player', { start: 10, end: 10 }),
+            frameRate: 15,
+            
+        });
+        anims.create({
+            key: 'animlolajump3',
+            frames: this.anims.generateFrameNumbers('player', { start: 11, end: 11 }),
+            frameRate: 15,
+            
+        });
+        anims.create({
+            key: 'animlolajump4',
+            frames: this.anims.generateFrameNumbers('player', { start: 12, end: 12 }),
+            frameRate: 15,
+            
+        });
+        //Vie////////////
+        anims.create({
+            key: 'vie3',
+            frames:[{key:'image_vie',  frame: 0}],
+            frameRate: 5,
+        });
+        anims.create({
+            key: 'vie2',
+            frames:[{key:'image_vie',  frame: 1}],
+            frameRate: 5,
+        });
+        anims.create({
+            key: 'vie1',
+            frames:[{key:'image_vie',  frame: 2}],
+            frameRate: 5,
         });
 
          /////Jauge_corruption
@@ -497,24 +593,29 @@ class Scene2 extends Phaser.Scene{
         }
 
 
+        if(life == 3)
+        {
+            image_vie.anims.play('vie3',true);
+        }
+        if(life == 2)
+        {
+            image_vie.anims.play('vie2',true);
+        }
+        if(life == 1)
+        {
+            image_vie.anims.play('vie1',true);
+        }
 
-        if(life <0){
-           
-            gameOver = true ;
-           
+        if(life <0){  
+            gameOver = true ; 
         }
         if (gameOver){ 
-          /*  this.add.text(448, 224, "You Loose", { font: "18px monospace",fill: "#000000",padding: { x: 50, y: 25 },backgroundColor: "#ffffff"})
-            .setDepth(1)
-            .setScrollFactor(0);
-        
-        
-            this.physics.pause();*/
-            //changement vers scene game over//
-          
             this.scene.start("ScenePerdu");
-            //return;
         }
+        if (win){
+              this.scene.start("SceneGagne");
+        }
+      
 
 
         if(invincible == true){
@@ -554,8 +655,7 @@ class Scene2 extends Phaser.Scene{
             setTimeout(function(){ compteur_sort_baton = true ;}, 5000);
             sort_pause = true ;
             setTimeout(function(){ sort_pause = false ;}, 2000);
-            player.setTint(0x0000ff);     
-            setTimeout(function(){player.setTint(0xffffff);}, 2000);
+            
         }
 
 
@@ -578,7 +678,7 @@ class Scene2 extends Phaser.Scene{
             compteur_bouclier = 180;
             invincible_bouclier = false ;
             player.setTint(0xffffff);
-          }
+        }
 		
 
 
@@ -609,6 +709,7 @@ class Scene2 extends Phaser.Scene{
         for (const enemie1 of enemies1.children.entries) {
             
             if(!sort_pause){
+                enemie1.setTint(0xffffff);  
                 enemie1.anims.play("animsennemie1",true);
                 if (!sens_enemie1) {
                     enemie1.direction = 'LEFT';  
@@ -623,16 +724,20 @@ class Scene2 extends Phaser.Scene{
                     enemie1.setVelocityX(-100);
                     enemie1.setFlipX(false); 
                 }
-            }else {enemie1.setVelocityX(0)}
-
+            }else {
+                enemie1.setVelocityX(0);
+                enemie1.setTint(0x979797);
+            }
+                 
         }
 
         //Mouvement ennemie2/////////////////////
    
         for (const enemie2 of enemies2.children.entries) {
-            if(sort_pause == false){
+            if(sort_pause == false){ 
+                enemie2.setTint(0xffffff); 
                 if(compteur_sens_enemie1 == 200 ){
-
+           
                     enemie2.anims.play("animsennemie2",true);
 
                         for (let i = 0; i < 5; i++) {
@@ -658,7 +763,7 @@ class Scene2 extends Phaser.Scene{
                     enemie2.anims.play("animsennemie2retour",true);
                     enemie2.anims.play("animsennemie2retour",false);
                 }
-            }
+            }else {  enemie2.setTint(0x979797);}
             
 
         }
@@ -668,13 +773,15 @@ class Scene2 extends Phaser.Scene{
         for (const enemie3 of enemies3.children.entries) {
             if(enemie3.body.blocked.down){enemie3.anims.play("sautennemie3",false);}
             if(sort_pause== false){
+                enemie3.setTint(0xffffff); 
 
                 if (cursors2.space.isDown && enemie3.body.blocked.down) {
                     enemie3.anims.play("sautennemie3",true);
-                    enemie3.body.setVelocityY(-speed*2);
+                    setTimeout(function(){enemie3.body.setVelocityY(-speed*2);},150);
+                    
                     enemie3.body.allowGravity = true;
                 }
-            }
+            }else { enemie3.setTint(0x979797);}
         }
 
 
@@ -702,8 +809,12 @@ class Scene2 extends Phaser.Scene{
            boss.destroy();
            etat_brume = false ;
            cd_tire_boss = 180 ; 
-           boss_calm = true ; 
-        } ;
+           boss_calm = true ;   
+
+
+            
+           setTimeout(function(){win = true},3000);
+        }
 
 
         if(player.x > 6900 && pv_boss >0){
@@ -726,6 +837,7 @@ class Scene2 extends Phaser.Scene{
                         boss = this.physics.add.sprite(boss_spawn3.x, boss_spawn3.y,"Boss").setSize(32, 64,) .setDepth(1) .setImmovable(1); 
                     }
                     boss_vivant = true 
+                    boss.setTint(0xffffff);
                     
                 }
 
@@ -771,6 +883,7 @@ class Scene2 extends Phaser.Scene{
                     
                     this.physics.add.overlap(boss,player,hit_boss, null, this);  
                     if(!sort_pause){
+                        boss.setTint(0xffffff);
                         boss.anims.play("Bosscolere",true);
                         if(compteur_sens_boss == 100 ){
                                 for (let i = 0; i < 15; i++) {
@@ -808,7 +921,7 @@ class Scene2 extends Phaser.Scene{
                             boss.setFlipX(true); 
                         }
                         
-                    }else {boss.setVelocityX(0);}
+                    }else {boss.setVelocityX(0);boss.setTint(0x979797);}
                 }
                 if(compteur_boss_enrage <=0){
                     etat_brume = false ;
@@ -860,36 +973,34 @@ class Scene2 extends Phaser.Scene{
             jump_count = 0 ;
         }
 
-        if (cursors2.Q.isDown) {
-            player.anims.play("animlolaleft", true);
-        } else if (cursors2.D.isDown) {
-            player.anims.play("animlolaright", true);
-        } else if (cursors2.space.isDown) {
-            player.anims.play("animlolaup", true);
-        } else if (cursors2.S.isDown) {
-            player.anims.play("animloladown", true);
-        } else {
-            player.anims.play("animlolanone", true);
-
-        }  
+       
+        if (onGround) {
+            if (player.body.velocity.x < 0) {player.anims.play("animlolaleft", true);}
+            else if (player.body.velocity.x > 0){  player.anims.play("animlolaright", true);}
+            else { player.anims.play("animlolanone", true);}
+        } 
+        else {
+            if(player.body.velocity.y < 0){
+               
+                if (player.body.velocity.x > 0){player.anims.play("animlolajump1", true); }
+                if (player.body.velocity.x < 0){ player.anims.play("animlolajump3", true);}
+            }else {player.anims.play("animlolajump1", true);}
+            if(player.body.velocity.y  > 0){
+                if (player.body.velocity.x > 0){player.anims.play("animlolajump2", true); }
+                if (player.body.velocity.x < 0){player.anims.play("animlolajump4", true);}
+            }
+          }
+          
     }
-}
-
-function finniveau(player,drapeau)
-{
-    /*this.add.text(448, 224, "You win", { font: "18px monospace",fill: "#000000",padding: { x: 50, y: 25 },backgroundColor: "#ffffff"})
-    .setDepth(1)
-    .setScrollFactor(0);
-
-
-    this.physics.pause();
-    gameOver = true ;*/
-    this.scene.start("SceneGagne");
 }
 
 
 function hitenemies (player,enemies)
 {   
+    particule.active=true
+    particule.setPosition(enemies.x,enemies.y)
+    particule.explode()
+
     enemies.destroy();
    
     hitplayer ();
@@ -902,7 +1013,12 @@ function hitwall (projectil,world)
 
 function hitplayerprijectils(player,projectil)
 {
+    
+    particule.active=true
+    particule.setPosition(projectil.x,projectil.y)
+    particule.explode()
     projectil.destroy();
+
     
     hitplayer ();
 
@@ -923,21 +1039,23 @@ function hitplayer ()
             invincible = true;
             player.setTint(0xff0000);
         }
-    }
+    }else{ compteur_bouclier = 0 ;}
     if(corruption >= 100)
     {
             corrompu = true;
         
     }
+   
 }
 
 function takeitem1(player,item)
 {
     item.destroy();
     
-    this.add.image(400,16, 'Botte')
+    imagebotte = this.add.image(449,69, 'Botte')
             .setDepth(5)
-            .setScrollFactor(0);
+            .setScrollFactor(0)
+            .setScale(0.4);
 
     get_item1 = true ;
     doublejump = true ;
@@ -948,9 +1066,10 @@ function takeitem2(player,item)
 {
     item.destroy();
     
-    this.add.image(450,32, 'Baton')
+    imagebaton = this.add.image(423,39, 'Baton')
             .setDepth(5)
-            .setScrollFactor(0);
+            .setScrollFactor(0)
+            .setScale(0.4);
 
     get_item2= true ;
 	item_baton_du_temp = true ;
@@ -962,14 +1081,19 @@ function takeitem3(player,item)
 {
     item.destroy();
     
-    this.add.image(500,16, 'Bouclier')
+    imagebouclier = this.add.image(474,39, 'bouclier')
             .setDepth(5)
-            .setScrollFactor(0);
+            .setScrollFactor(0)
+            .setScale(0.4);
 
     get_item3 = true ;
 }
 function hit_projectil_player(player,projectil_boss)
 {
+    
+    particule.active=true
+    particule.setPosition(projectil_boss.x,projectil_boss.y)
+    particule.explode()
     projectil_boss.destroy();
     hitplayer ();
     projectil_boss_etat = false ;

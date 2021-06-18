@@ -1,5 +1,5 @@
 var menu_accueil;
-var play_accueil = false;
+var play_histoire = false;
 var start_accueil;
 var controles_accueil;
 var info_controle_accueil = false ;
@@ -96,12 +96,12 @@ class SceneMenu extends Phaser.Scene {
 
     start_accueil.on('pointerdown', function (pointer) {
       
-      play_accueil = true;   
+      play_histoire = true;   
     });
 
-    if(play_accueil === true ){
-      play_accueil = false ;
-      this.scene.start("playGame");
+    if(play_histoire === true ){
+      play_histoire = false ;
+      this.scene.start("SceneHistoire");
     }
 
     controles_accueil.on('pointerover', function (event) {

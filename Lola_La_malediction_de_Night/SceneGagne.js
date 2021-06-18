@@ -7,14 +7,14 @@ class SceneGagne extends Phaser.Scene {
       
     }
     preload (){ 
-      this.load.image("menucredits", "assets/images/menucredits.png");
-      this.load.spritesheet("boutonretour", "assets/images/boutonretour.png", { frameWidth:52, frameHeight: 40,});
+      this.load.image("menuhappyend", "assets/images/menuhappyend.png");
+      
       
     
     }
 
     create(){
-      menu_victoire = this.add.image(448,224, 'menucredits')
+      menu_victoire = this.add.image(448,224, 'menuhappyend')
       .setDepth(1)
       .setScrollFactor(0);
 

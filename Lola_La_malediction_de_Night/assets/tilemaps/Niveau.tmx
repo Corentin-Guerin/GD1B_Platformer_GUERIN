@@ -202,7 +202,7 @@
    <point/>
   </object>
  </objectgroup>
- <objectgroup id="7" name="Ennemie1" visible="0">
+ <objectgroup id="7" name="Ennemie1">
   <object id="14" x="1135.23" y="557.746">
    <point/>
   </object>
@@ -218,7 +218,7 @@
   <object id="18" x="4307" y="562">
    <point/>
   </object>
-  <object id="19" x="4724" y="162">
+  <object id="19" x="4603" y="157">
    <point/>
   </object>
   <object id="20" x="6503.67" y="547.667">
@@ -298,9 +298,6 @@
    <point/>
   </object>
   <object id="55" x="6810.67" y="158.333">
-   <point/>
-  </object>
-  <object id="56" x="6477" y="682">
    <point/>
   </object>
  </objectgroup>

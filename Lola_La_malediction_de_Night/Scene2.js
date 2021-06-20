@@ -4,6 +4,7 @@ var player;
 var gameOver =false;
 var win = false;
 var invincible = false ;
+var musicplay = false ;
 
 var cursors2;
 var direction = 'up';
@@ -166,7 +167,11 @@ class Scene2 extends Phaser.Scene{
             delay : 0,
 
         }
-        this.musicFond.play(musicConfig);
+        if(!musicplay){
+            musicplay = true ;
+            this.musicFond.play(musicConfig);
+        }
+        
 
         ornement = this.add.image(448,224, 'ornement')
         .setDepth(5)

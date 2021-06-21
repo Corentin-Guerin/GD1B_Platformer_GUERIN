@@ -5,8 +5,10 @@ var controles_accueil;
 var info_controle_accueil = false ;
 var credits_accueil;
 var info_credits_accueil = false ;
-
 var menu_accuil_ou_game = false ; 
+var mobile_active = false;
+var mobile_active_image;
+
 
 class SceneMenu extends Phaser.Scene {
     constructor() {
@@ -20,9 +22,21 @@ class SceneMenu extends Phaser.Scene {
       this.load.spritesheet("boutonstart", "assets/images/boutonstart.png", { frameWidth:287, frameHeight: 72,});
       this.load.spritesheet("boutoncontroles", "assets/images/boutoncontroles.png", { frameWidth:135, frameHeight: 39,});
       this.load.spritesheet("boutoncredits", "assets/images/boutoncredits.png", { frameWidth:135, frameHeight: 39,});
+      this.load.spritesheet("mobile_active_image", "assets/images/activemobile.png", { frameWidth:60, frameHeight: 50,});
     }
 
     create(){
+
+      mobile_active_image = this.add.sprite(190,400, 'mobile_active_image')
+      .setDepth(2)
+      .setScrollFactor(0)
+      .setScale(0.7)
+      .setInteractive({ cursor: 'pointer' });
+
+      this.add.text(195, 382, "Version mobile ", {font: "18px monospace",fill: "#000000",padding: { x: 20, y: 10 }})
+            .setDepth(12)
+            .setScrollFactor(0);
+
       menu_accueil = this.add.image(448,224, 'menu_accueil')
       .setDepth(1)
       .setScrollFactor(0);
@@ -81,10 +95,35 @@ class SceneMenu extends Phaser.Scene {
       frameRate: 5,
       });
 
-
+      anims.create({
+        key: 'bouton_mobile_non',
+        frames: this.anims.generateFrameNumbers('mobile_active_image', { start: 0, end: 0 }),
+        frameRate: 5,
+        });
+      
+      anims.create({
+        key: 'bouton_mobile_oui',
+        frames: this.anims.generateFrameNumbers('mobile_active_image', { start: 1, end: 1 }),
+        frameRate: 5,
+        });
     }
 
     update (){
+
+      mobile_active_image.on('pointerdown', function (pointer) {
+        
+        if(!mobile_active){
+          setTimeout(function(){ mobile_active = true ;},300);
+          mobile_active_image.anims.play('bouton_mobile_oui',true);
+          console.log(mobile_active);
+        }
+        if(mobile_active){
+           setTimeout(function(){ mobile_active = false ;},300);
+           mobile_active_image.anims.play('bouton_mobile_non',true);
+           console.log(mobile_active);
+        }
+      });
+     
 
       start_accueil.on('pointerover', function (event) {
         start_accueil.anims.play('bouton_start_yes',true);

@@ -22,6 +22,19 @@ var jauge_corruption;
 var image_vie;
 var checkpoint = 0 ;
 
+var fleche_haut ;
+var haut = false ;
+var fleche_bas ;
+var bas = false ;
+var fleche_droite ;
+var droite = false ;
+var fleche_gauche ;
+var gauche = false ;
+var bouton_power1;
+var power1;
+var bouton_power2;
+var power2;
+
 var onGround;
 
 var corruption = 0 ;
@@ -110,7 +123,13 @@ class Scene2 extends Phaser.Scene{
         this.load.image("brumes", "assets/images/brumes.png");
         this.load.image("grille", "assets/images/grille.png");
         this.load.image("particule", "assets/images/particule.png");
-        this.load.audio("audio_fond","assets/images/audio_fond.mp3")
+        this.load.image("flechehaut", "assets/images/flechehaut.png");
+        this.load.image("flechebas", "assets/images/flechebas.png");
+        this.load.image("flechegauche", "assets/images/flechegauche.png");
+        this.load.image("flechedroite", "assets/images/flechedroite.png");
+        this.load.image("bouton_power1_image", "assets/images/boutonpower1.png");
+        this.load.image("bouton_power2_image", "assets/images/boutonpower2.png");
+        this.load.audio("audio_fond","assets/images/audio_fond.mp3");
 
         this.load.spritesheet("bouclier", "assets/tilesets/bouclier.png", { frameWidth:72, frameHeight: 72,});
         this.load.spritesheet("Botte", "assets/tilesets/botte.png", { frameWidth:72, frameHeight: 72,});
@@ -127,6 +146,7 @@ class Scene2 extends Phaser.Scene{
         this.load.spritesheet("projectilboss", 'assets/tilesets/projectilboss.png', { frameWidth:64, frameHeight: 64,});
         this.load.spritesheet("projectil", 'assets/tilesets/projectil.png', { frameWidth:32, frameHeight: 32,});
         this.load.spritesheet("player", 'assets/tilesets/Lola2.png', { frameWidth:64, frameHeight: 96,});
+
         
        
     }
@@ -197,6 +217,102 @@ class Scene2 extends Phaser.Scene{
         .setScale(2)
         .setAlpha(0);
         
+        if(mobile_active){
+            fleche_haut = this.add.sprite(865,360, 'flechehaut')
+            .setDepth(5)
+            .setScrollFactor(0)
+            .setScale(0.3)
+            .setInteractive({ cursor: 'pointer' }); 
+
+
+            fleche_bas= this.add.sprite(865,420, 'flechebas')
+            .setDepth(5)
+            .setScrollFactor(0)
+            .setScale(0.3)
+            .setInteractive({ cursor: 'pointer' });
+            
+
+            fleche_gauche= this.add.sprite(30,416, 'flechegauche')
+            .setDepth(5)
+            .setScrollFactor(0)
+            .setScale(0.3)
+            .setInteractive({ cursor: 'pointer' });
+           
+
+            fleche_droite= this.add.sprite(90,416, 'flechedroite')
+            .setDepth(5)
+            .setScrollFactor(0)
+            .setScale(0.3)
+            .setInteractive({ cursor: 'pointer' });
+            ;
+
+            if(get_item3){
+
+
+                bouton_power1 = this.add.sprite(806, 420, 'bouton_power1_image')
+                .setDepth(5)
+                .setScrollFactor(0)
+                .setScale(0.3)
+                .setInteractive({ cursor: 'pointer' });
+                ;
+
+                bouton_power1.on('pointerdown', function(){
+                    power1 = true;
+                }, this)
+                bouton_power1.on('pointerup', function(){
+                    power1 = false;
+                }, this)
+
+            }
+            if(get_item2){
+                bouton_power2 = this.add.sprite(806, 360, 'bouton_power2_image')
+                .setDepth(5)
+                .setScrollFactor(0)
+                .setScale(0.3)
+                .setInteractive({ cursor: 'pointer' });
+                ;
+
+                bouton_power2.on('pointerdown', function(){
+                    power2 = true;
+                }, this)
+                bouton_power2.on('pointerup', function(){
+                    power2 = false;
+                }, this)
+            }
+
+            
+
+            fleche_gauche.on('pointerdown', function(){
+                gauche = true;
+            }, this)
+            fleche_gauche.on('pointerup', function(){
+                gauche = false;
+            }, this)
+
+            fleche_droite.on('pointerdown', function(){
+                droite = true;
+            }, this)
+            fleche_droite.on('pointerup', function(){
+                droite = false;
+            }, this)
+
+            fleche_haut.on('pointerdown', function(){
+                haut = true;
+            }, this)
+            fleche_haut.on('pointerup', function(){
+                haut = false;
+            }, this)
+            fleche_bas.on('pointerdown', function(){
+                bas = true;
+            }, this)
+            fleche_bas.on('pointerup', function(){
+                bas = false;
+            }, this)
+
+
+        }
+
+
         if(checkpoint == 0){
         player = this.physics.add.sprite(280, 470,  'player')
                 .setSize(64, 80,)
@@ -553,6 +669,8 @@ class Scene2 extends Phaser.Scene{
 
     update (){
 
+        
+
         if(player.x > 2280 && player.x < 2290  ){
             checkpoint = 1;
            
@@ -654,7 +772,7 @@ class Scene2 extends Phaser.Scene{
 
 
         const JustDownA = Phaser.Input.Keyboard.JustDown(cursors2.A)       
-        if (JustDownA &&  get_item2 && compteur_sort_baton )
+        if ((JustDownA || power2) &&  get_item2 && compteur_sort_baton )
         {
             compteur_sort_baton = false;
             setTimeout(function(){ compteur_sort_baton = true ;}, 5000);
@@ -662,11 +780,11 @@ class Scene2 extends Phaser.Scene{
             setTimeout(function(){ sort_pause = false ;}, 2000);
             
         }
-
+      
 
 		//Item 3 ///////////////////////////////////////
 		const activebouclier = Phaser.Input.Keyboard.JustDown(cursors2.E) 
-		if(get_item3 && activebouclier && compteur_sort_bouclier <= 0){
+		if(get_item3 && (activebouclier || power1) && compteur_sort_bouclier <= 0){
 
                 compteur_sort_bouclier = 360 ;
                 player.setTint(0x00ffff);
@@ -684,8 +802,7 @@ class Scene2 extends Phaser.Scene{
             invincible_bouclier = false ;
             player.setTint(0xffffff);
         }
-		
-
+       
 
         const speed = 250;
         const prevVelocity = player.body.velocity.clone();
@@ -780,7 +897,7 @@ class Scene2 extends Phaser.Scene{
             if(sort_pause== false){
                 enemie3.setTint(0xffffff); 
 
-                if (cursors2.space.isDown && enemie3.body.blocked.down) {
+                if ((cursors2.space.isDown || haut) && enemie3.body.blocked.down) {
                     enemie3.anims.play("sautennemie3",true);
                     setTimeout(function(){enemie3.body.setVelocityY(-speed*2);},150);
                     
@@ -909,7 +1026,7 @@ class Scene2 extends Phaser.Scene{
                                 
                             }      
                         }
-                        if (cursors2.space.isDown && boss.body.blocked.down) {
+                        if ((cursors2.space.isDown || haut) && boss.body.blocked.down) {
                         boss.body.setVelocityY(-speed*2);
                         }   
                         if (!sens_boss) {
@@ -942,18 +1059,18 @@ class Scene2 extends Phaser.Scene{
         //mouvement si rien n'est affecter
         player.body.setVelocityX(0);
         // Horizontal movement
-        if (cursors2.Q.isDown) {
+        if (cursors2.Q.isDown || gauche) {
             player.body.setVelocityX(-speed);
 
 
             direction = 'right' ;
 
-        } else if (cursors2.D.isDown) {
+        } else if (cursors2.D.isDown || droite) {
             player.body.setVelocityX(speed);
             direction = 'left' ;
         }
         // Vertical movement
-        if (cursors2.S.isDown) {
+        if (cursors2.S.isDown || bas) {
             player.body.setVelocityY(speed);
             direction = 'down' ;
         }
@@ -961,20 +1078,20 @@ class Scene2 extends Phaser.Scene{
                                                 
     
         const isJumpJustDownup = Phaser.Input.Keyboard.JustDown(cursors2.space)
-        if (isJumpJustDownup && onGround ) {
+        if ((isJumpJustDownup||haut) && onGround ) {
             player.body.setVelocityY(-speed*2);
             direction = 'up' ;
             jump_count ++ ;
          
            
         }
-        if( isJumpJustDownup && doublejump && !onGround && jump_count < 2 ){
+        if( (isJumpJustDownup||haut)  && doublejump && !onGround && jump_count < 2 ){
             player.body.setVelocityY(-speed*2);
             direction = 'up' ;
             jump_count ++ ;
         }
 
-        if(onGround && !isJumpJustDownup){
+        if(onGround && (!isJumpJustDownup || !haut) ){
             jump_count = 0 ;
         }
 
@@ -1065,6 +1182,8 @@ function takeitem1(player,item)
     get_item1 = true ;
     doublejump = true ;
 
+   
+
 }
 
 function takeitem2(player,item)
@@ -1079,6 +1198,22 @@ function takeitem2(player,item)
     get_item2= true ;
 	item_baton_du_temp = true ;
 
+    if(mobile_active){
+        bouton_power2 = this.add.sprite(806, 420, 'bouton_power2_image')
+                   .setDepth(5)
+                   .setScrollFactor(0)
+                   .setScale(0.3)
+                   .setInteractive({ cursor: 'pointer' });
+                   ;
+   
+                   bouton_power2.on('pointerdown', function(){
+                       power2 = true;
+                   }, this)
+                   bouton_power2.on('pointerup', function(){
+                       power2 = false;
+                   }, this)
+    }
+
 
 }
 
@@ -1092,6 +1227,22 @@ function takeitem3(player,item)
             .setScale(0.4);
 
     get_item3 = true ;
+
+    if(mobile_active){
+        bouton_power1 = this.add.sprite(806, 420, 'bouton_power1_image')
+                   .setDepth(5)
+                   .setScrollFactor(0)
+                   .setScale(0.3)
+                   .setInteractive({ cursor: 'pointer' });
+                   ;
+   
+                   bouton_power1.on('pointerdown', function(){
+                       power1 = true;
+                   }, this)
+                   bouton_power1.on('pointerup', function(){
+                       power1 = false;
+                   }, this)
+    }
 }
 function hit_projectil_player(player,projectil_boss)
 {

@@ -761,7 +761,12 @@ class Scene2 extends Phaser.Scene{
                 corrompu = false ;
                 pv_boss = 3 ;
                 etat_brume = false ;
-
+                gauche = false;
+                droite = false;
+                haut = false;
+                bas = false;
+                power1 = false;
+                power2 = false;
                 this.scene.restart();
                 //lance la scene "game over"
             } 

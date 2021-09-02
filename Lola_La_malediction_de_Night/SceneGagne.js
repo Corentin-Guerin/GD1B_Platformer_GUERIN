@@ -23,8 +23,8 @@ class SceneGagne extends Phaser.Scene {
 
     update (){
         this.input.on('pointerdown', function (pointer) {
-		document.location.reload();
-        
+	document.location.reload();
+        })
       
   }
 }
